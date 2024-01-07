@@ -11,9 +11,9 @@ class Knight
 
     @@visited = []
     
-    def initialize(value)
+    def initialize(value, prevValue = nil)
         @value = value
-        @prevValue = nil
+        @prevValue = prevValue
         @nextValue = nil
         @@visited << value
     end
@@ -24,29 +24,29 @@ end
 
 def knight_moves(startpos, endpos)
 
-    q = [startpos]
-            
+    q = [startpos]        
+
+    newKnight = Knight.new(startpos)
+
     while q.length > 0
 
-        newKnight = Knight.new(q.shift)
-
+        prev = newKnight.value
         #Work on checking for history nodes to not step on the same coordinates
         #Use @@visited variable to reject nodes that are included in the array
         #p Knight.class_variable_get(:@@visited)
 
-        if endpos != newKnight.value   
-            LEGAL_MOVES.map { |val|
-                q << val.map.with_index { |val, idx|
-                        newKnight.value[idx] + val
-                }
+        LEGAL_MOVES.map { |val|
+            q << val.map.with_index { |val, idx|
+                    newKnight.value[idx] + val
             }
-        else
-            #Find a way to retun all the arrays that the Knight took to reach the endpos.
-            #Try to find a way to add @prevValue or @nextValue
-            return newKnight.value
-        end
+        }
+
+        newKnight = Knight.new(q.shift, prev)
+
+        return newKnight.value if newKnight.value == endpos
     end
+    
 end
 
 
-p knight_moves([0,0], [1, 2])
+p knight_moves([0,0], [2, 1])
