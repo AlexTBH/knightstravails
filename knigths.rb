@@ -7,19 +7,21 @@ LEGAL_MOVES = [[2, 1], [1, 2], [2, -1], [1, -2], [-2, -1], [-1, -2], [-2, 1], [-
 
 class Knight
     attr_reader :value, :prevValue, :history
-    attr_accessor :visited 
-
+    attr_accessor :visited
     @@visited = []
     
-    def initialize(value, prevValue = nil)
+    def initialize(value = nil, prevValue = nil)
         @value = value
         @prevValue = prevValue
-        @nextValue = nil
-        @@visited << value
+        @@visited << value unless @@visited.include?(value)
+    end
+
+    def self.all
+        ObjectSpace.each_object(self).to_a
     end
 
 
-end
+end 
 
 
 def knight_moves(startpos, endpos)
@@ -30,23 +32,41 @@ def knight_moves(startpos, endpos)
 
     while q.length > 0
 
-        prev = newKnight.value
-        #Work on checking for history nodes to not step on the same coordinates
-        #Use @@visited variable to reject nodes that are included in the array
-        #p Knight.class_variable_get(:@@visited)
+        #Work on when to stop the while loop, when endpos == ?
 
+        return if q.first == endpos
+
+        prev = q.shift
+
+        s = []
+
+        #This is where the Knight determines which steps to include in the stack next
+        #Include a function that prevents the map from queuing steps that are off the border
         LEGAL_MOVES.map { |val|
-            q << val.map.with_index { |val, idx|
-                    newKnight.value[idx] + val
+            s << val.map.with_index { |val, idx|
+                    prev[idx] + val
             }
         }
 
-        newKnight = Knight.new(q.shift, prev)
+        #This is where the Knight que up the next steps to take
+        for i in s do
+            knight = Knight.new(i, prev)
+            q << i
+        end
 
-        return newKnight.value if newKnight.value == endpos
+        #p "Prev: #{prev}"
+        #p "Stack: #{s}"
+        #p q
+        #p s
+
+        p Knight.class_variable_get(:@@visited)
+        
+
     end
     
 end
 
 
-p knight_moves([0,0], [2, 1])
+knight_moves([0,0], [2, 1])
+p Knight.all
+
