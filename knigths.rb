@@ -6,27 +6,29 @@ LEGAL_MOVES = [[2, 1], [1, 2], [2, -1], [1, -2], [-2, -1], [-1, -2], [-2, 1], [-
 
 
 class Knight
-    attr_reader :value, :prevValue, :history
+    attr_reader :value, :prevValue, :history, :visited
     attr_accessor :visited
-    @@visited = []
+
+    @visited = []
     
     def initialize(value = nil, prevValue = nil)
         @value = value
         @prevValue = prevValue
-        @@visited << value unless @@visited.include?(value)
+        @visited << value unless @visited.include?(value)
     end
 
     def self.all
         ObjectSpace.each_object(self).to_a
     end
 
-
 end 
 
 
 def knight_moves(startpos, endpos)
 
-    q = [startpos]        
+    q = []
+    
+    q << startpos
 
     newKnight = Knight.new(startpos)
 
@@ -36,31 +38,38 @@ def knight_moves(startpos, endpos)
 
         return if q[0] == endpos
 
-
         prev = q.shift
 
         #Build the code with only que, remove stack
 
         #This is where the Knight determines which steps to include in the stack next, this is done by creating knight objects with the next steps
-        #Include a function that prevents the map from queuing steps that are off the border
-    
+        
+        def valid_move?(val)
+            return true if val[0] < 8 && val[0] > 0 && val[1] < 8 && val[1] > 0 && val
+        end
+
+        def already_visited?(val)
+            return true unless @visited.include?(val) 
+        end
+
+        knight = ""
+
+        LEGAL_MOVES.each do |val|
+            temp = val.map.with_index { |val, idx| prev[idx] + val
+                (prev[idx] + val)}
+            if valid_move?(temp) && already_visited?(temp)
+                knight = Knight.new(temp, prev)
+                q << knight.value
+            end
+        end
+
+
 
         ######
-        #Keep working from here, figure out nested arrays occur
+        #Create an if statement to check wheter to create new steps, or if the endpos is already reached
+        #If the endpos is already reached, returned the current value and prevvalues
 
-        LEGAL_MOVES.map { |val|
-            knight = Knight.new(val.map.with_index { |val, idx| prev[idx] + val []
-                (prev[idx] + val)
-            }, prev)
-            q << knight.value
-        }
-
-        p q
-
-        
-
-        #######
-
+        ######
 
 
         #p Knight.class_variable_get(:@@visited)
@@ -71,6 +80,6 @@ def knight_moves(startpos, endpos)
 end
 
 
-knight_moves([0,0], [4, 2])
+knight_moves([0,0], [2, 1])
 #p Knight.all
 
