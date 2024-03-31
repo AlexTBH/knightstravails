@@ -34,32 +34,36 @@ def knight_moves(startpos, endpos)
 
         #Work on when to stop the while loop, when endpos == ?
 
-        return if q.first == endpos
+        return if q[0] == endpos
+
 
         prev = q.shift
 
-        s = []
+        #Build the code with only que, remove stack
 
-        #This is where the Knight determines which steps to include in the stack next
+        #This is where the Knight determines which steps to include in the stack next, this is done by creating knight objects with the next steps
         #Include a function that prevents the map from queuing steps that are off the border
+    
+
+        ######
+        #Keep working from here, figure out nested arrays occur
+
         LEGAL_MOVES.map { |val|
-            s << val.map.with_index { |val, idx|
-                    prev[idx] + val
-            }
+            knight = Knight.new(val.map.with_index { |val, idx| prev[idx] + val []
+                (prev[idx] + val)
+            }, prev)
+            q << knight.value
         }
 
-        #This is where the Knight que up the next steps to take
-        for i in s do
-            knight = Knight.new(i, prev)
-            q << i
-        end
+        p q
 
-        #p "Prev: #{prev}"
-        #p "Stack: #{s}"
-        #p q
-        #p s
+        
 
-        p Knight.class_variable_get(:@@visited)
+        #######
+
+
+
+        #p Knight.class_variable_get(:@@visited)
         
 
     end
@@ -67,6 +71,6 @@ def knight_moves(startpos, endpos)
 end
 
 
-knight_moves([0,0], [2, 1])
-p Knight.all
+knight_moves([0,0], [4, 2])
+#p Knight.all
 
