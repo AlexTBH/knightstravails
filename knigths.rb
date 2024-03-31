@@ -9,61 +9,64 @@ class Knight
     attr_reader :value, :prevValue, :history, :visited
     attr_accessor :visited
 
-    @visited = []
+    @@visited = []
     
     def initialize(value = nil, prevValue = nil)
         @value = value
         @prevValue = prevValue
-        @visited << value unless @visited.include?(value)
+        @@visited << value unless @@visited.include?(value)
     end
 
     def self.all
         ObjectSpace.each_object(self).to_a
     end
 
+    def self.visited?(val)
+        @@visited.include?(val)
+    end
 end 
 
 
 def knight_moves(startpos, endpos)
 
+    newKnight = Knight.new(startpos)
+
     q = []
     
-    q << startpos
-
-    newKnight = Knight.new(startpos)
+    q << newKnight
 
     while q.length > 0
 
-        #Work on when to stop the while loop, when endpos == ?
-
-        return if q[0] == endpos
 
         prev = q.shift
-
-        #Build the code with only que, remove stack
-
+        return if prev.value == endpos
         #This is where the Knight determines which steps to include in the stack next, this is done by creating knight objects with the next steps
+
         
-        def valid_move?(val)
-            return true if val[0] < 8 && val[0] > 0 && val[1] < 8 && val[1] > 0 && val
-        end
-
-        def already_visited?(val)
-            return true unless @visited.include?(val) 
-        end
-
-        knight = ""
+        ### Figure out why val = 0,0 and prevval = nil appears multiple times
 
         LEGAL_MOVES.each do |val|
-            temp = val.map.with_index { |val, idx| prev[idx] + val
-                (prev[idx] + val)}
+            temp = val.map.with_index { |val, idx| prev.value[idx] + val
+                (prev.value[idx] + val)}
+
+        ### try to check node in already visited instead of temp
             if valid_move?(temp) && already_visited?(temp)
                 knight = Knight.new(temp, prev)
-                q << knight.value
+                q << knight
             end
         end
 
+        
+        ###### WORK HERE #######
 
+        
+        #if knight.value == endpos
+        #    while knight.prevValue == true
+        #        puts knight.prevValue
+        #        tempKnight = knight.prevValue
+        #    end
+        #end
+        ###### WORK HERE #######
 
         ######
         #Create an if statement to check wheter to create new steps, or if the endpos is already reached
@@ -74,12 +77,22 @@ def knight_moves(startpos, endpos)
 
         #p Knight.class_variable_get(:@@visited)
         
+        
 
     end
     
 end
 
+def valid_move?(val)
+    return true if val[0] < 8 && val[0] > 0 && val[1] < 8 && val[1] > 0 && val
+end
 
-knight_moves([0,0], [2, 1])
-#p Knight.all
+def already_visited?(val)
+    return true unless Knight.visited?(val)
+end
+
+
+
+knight_moves([0,0], [4, 2])
+p Knight.all
 
