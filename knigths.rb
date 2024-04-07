@@ -93,6 +93,6 @@ end
 
 
 
-knight_moves([0,0], [4, 2])
+knight_moves([0,0], [2, 1])
 p Knight.all
 
