@@ -27,7 +27,6 @@ class Knight
     end
 end 
 
-
 def knight_moves(startpos, endpos)
 
     newKnight = Knight.new(startpos)
@@ -40,8 +39,6 @@ def knight_moves(startpos, endpos)
 
         prev = q.shift
 
-        #This is where the Knight determines which steps to include in the stack next, this is done by creating knight objects with the next steps
-        
         LEGAL_MOVES.each do |val|
             temp = val.map.with_index { |val, idx| prev.value[idx] + val
                 (prev.value[idx] + val)}
@@ -52,9 +49,6 @@ def knight_moves(startpos, endpos)
                 q << knight
             end
         end
-
-        #p Knight.class_variable_get(:@@visited)
-        p q
     end
 end
 
@@ -64,12 +58,16 @@ def correctSpot?(knight, endpos)
 
         currentKnight = knight
         tempKnight = ""
+        steps = []
 
-        while currentKnight.prevValue != nil
-            p currentKnight.value
-            tempKnight = currentKnight.prevValue
+        while currentKnight != nil
+            steps.unshift(currentKnight.value)
+            if currentKnight.prevValue.nil? then tempKnight = nil else tempKnight = currentKnight.prevValue end
             currentKnight = tempKnight
         end
+        
+    p "You've reached the end positions in #{steps.count} moves! Here is your moves:"
+    steps.each { |n| p n}
     return true
     end
 
@@ -83,5 +81,4 @@ def already_visited?(val)
     return true unless Knight.visited?(val)
 end
 
-
-knight_moves([0,0], [4, 2])
+knight_moves([0, 0], [4, 2])
